@@ -26,6 +26,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.Socket;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 	locations = {"/META-INF/spring/integration/tcpServerCustomSerialize-context.xml"})
 @DirtiesContext
 public class TcpServerCustomSerializerTest {
+
+	private static final Logger LOGGER = Logger.getLogger(TcpServerCustomSerializerTest.class);
 
     @Autowired
     @Qualifier("incomingServerChannel")
@@ -91,6 +94,13 @@ public class TcpServerCustomSerializerTest {
         Socket socket = null;
         Writer out = null;
         BufferedReader in = null;
+
+        try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+			throw new IllegalStateException(e1);
+		}
+
         try {
             socket = new Socket("localhost", availableServerSocket);
             out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -109,9 +119,9 @@ public class TcpServerCustomSerializerTest {
             assertEquals(sourceMessage, response);
 
         } catch (IOException e) {
-            fail("Test ended with an exception " + e.getMessage());
-        }
-        finally {
+        	LOGGER.error(e.getMessage(), e);
+        	fail(String.format("Test (port: %s) ended with an exception: %s", availableServerSocket, e.getMessage()));
+        } finally {
             try {
                 socket.close();
                 out.close();
