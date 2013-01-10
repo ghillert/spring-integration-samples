@@ -24,6 +24,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.integration.Message;
 import org.springframework.integration.core.PollableChannel;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 /**
  *
@@ -31,6 +33,7 @@ import org.springframework.integration.core.PollableChannel;
  * @author Gunnar Hillert
  *
  */
+@DirtiesContext(classMode=ClassMode.AFTER_EACH_TEST_METHOD)
 public class FtpInboundChannelAdapterSample {
 
 	private static final Logger LOGGER = Logger.getLogger(FtpInboundChannelAdapterSample.class);
@@ -54,6 +57,7 @@ public class FtpInboundChannelAdapterSample {
 		assertNotNull(message2);
 		assertNull("Was NOT expecting a third message.", message3);
 
+		ctx.close();
 	}
 
 }

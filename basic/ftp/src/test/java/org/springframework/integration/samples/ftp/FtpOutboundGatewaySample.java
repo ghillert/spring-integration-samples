@@ -24,6 +24,8 @@ import java.util.List;
 import org.junit.Test;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 /**
  * Demonstrates use of the outbound gateway to use ls, get and rm.
@@ -44,6 +46,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  * @since 2.1
  *
  */
+@DirtiesContext(classMode=ClassMode.AFTER_EACH_TEST_METHOD)
 public class FtpOutboundGatewaySample {
 
 
@@ -66,6 +69,7 @@ public class FtpOutboundGatewaySample {
 
 		assertTrue("Expected FTP remote directory to be empty",  new File(TestSuite.FTP_ROOT_DIR).delete());
 
+		ctx.close();
 	}
 
 }
